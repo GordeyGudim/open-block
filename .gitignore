@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+*.pyc
+*.egg-info/
+build/
+dist/
+# артефакты генерации
+*.svg
+*.png
+!samples/*.svg
+!samples/*.png

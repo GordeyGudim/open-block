@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "gostflow"
+version = "1.0.0"
+description = "Блок-схемы по ГОСТ 19.701-90 из кода C++: CLI и локальный веб-интерфейс"
+readme = "gostflow/README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+# Пакет зависит только от стандартной библиотеки Python.
+# Graphviz (dot) и rsvg-convert/ImageMagick — внешние исполняемые файлы,
+# ставятся системным пакетным менеджером и находятся через PATH.
+dependencies = []
+
+[project.scripts]
+gostflow = "gostflow.cli:main"
+
+[tool.setuptools]
+packages = ["gostflow"]

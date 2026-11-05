@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Блок-схемы C++ по ГОСТ 19.701-90</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true">
+      <rect x="3" y="3" width="34" height="34" rx="10" fill="#eef2ff"/>
+      <rect x="12" y="8" width="16" height="6" rx="3" fill="#4f46e5"/>
+      <rect x="12" y="17" width="16" height="6" rx="1" fill="#6366f1"/>
+      <path d="M20 23 L28 28 L20 33 L12 28 Z" fill="#a5b4fc"/>
+    </svg>
+    <div class="brand-text">
+      <div class="brand-title">Блок-схемы C++</div>
+      <div class="brand-sub">ГОСТ 19.701-90 · ISO 5807</div>
+    </div>
+  </div>
+  <div class="topbar-actions">
+    <span class="badge-soft">работает локально</span>
+    <button class="ghost" id="btn-legend" type="button">
+      <svg viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.4">
+        <rect x="3" y="2.5" width="10" height="11" rx="2"/>
+        <path d="M6 6h4M6 8.5h4M6 11h2"/>
+      </svg>
+      Легенда ГОСТ
+    </button>
+  </div>
+</header>
+
+<main class="workspace">
+
+  <section class="panel editor-panel">
+    <div class="panel-head">
+      <div class="panel-title">
+        Код
+        <span class="lang-badge">C++</span>
+      </div>
+      <div class="panel-actions">
+        <select id="examples" title="Загрузить пример">
+          <option value="">Примеры…</option>
+        </select>
+        <button class="primary" id="btn-build" type="button">
+          Построить
+          <kbd>Ctrl ↵</kbd>
+        </button>
+      </div>
+    </div>
+
+    <div class="editor-wrap">
+      <div class="line-numbers" id="lineNumbers" aria-hidden="true">1</div>
+      <textarea id="code" spellcheck="false" autocomplete="off" autocapitalize="off"
+                placeholder="Вставьте код C++ сюда…"></textarea>
+    </div>
+
+    <div class="statusbar">
+      <span id="parse-status">Готово</span>
+      <span id="code-stats"></span>
+    </div>
+  </section>
+
+  <section class="panel diagram-panel">
+    <div class="panel-head">
+      <div class="panel-title">
+        Блок-схема
+        <span class="gost-badge">ГОСТ 19.701-90</span>
+      </div>
+      <div class="panel-actions">
+        <div class="zoom-group" role="group" aria-label="Масштаб">
+          <button id="zoom-out" type="button" title="Уменьшить">−</button>
+          <button id="zoom-fit" type="button" title="Вписать схему">В размер</button>
+          <button id="zoom-in" type="button" title="Увеличить">+</button>
+        </div>
+        <button class="ghost" id="btn-svg" type="button" title="Скачать SVG">
+          <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M8 2v8M5 7.5 8 10.5l3-3M3 13h10"/>
+          </svg>
+          SVG
+        </button>
+        <button class="ghost" id="btn-png" type="button" title="Скачать PNG">
+          <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M8 2v8M5 7.5 8 10.5l3-3M3 13h10"/>
+          </svg>
+          PNG
+        </button>
+      </div>
+    </div>
+
+    <div class="tabs" id="funcTabs"></div>
+
+    <div class="canvas-wrap" id="canvasWrap">
+      <div class="empty-state" id="emptyState">
+        <svg viewBox="0 0 64 64" width="64" height="64" fill="none" stroke="#b8c1d9" stroke-width="2">
+          <rect x="8" y="6" width="30" height="12" rx="6"/>
+          <rect x="8" y="26" width="30" height="12" rx="2"/>
+          <path d="M23 18v8M23 38v6M23 44h18M41 38v12M41 50l-4-4M41 50l4-4"/>
+        </svg>
+        <div class="empty-title">Схема появится здесь</div>
+        <div class="empty-text">Вставьте код C++ слева и нажмите «Построить»<br>или выберите готовый пример.</div>
+      </div>
+
+      <svg id="diagram" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet"></svg>
+
+      <div class="canvas-hint">Колесо — масштаб · перетаскивание — сдвиг</div>
+    </div>
+  </section>
+
+</main>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<dialog id="legendDialog" class="legend-dialog">
+  <div class="legend-head">
+    <div>
+      <h2>Условные обозначения</h2>
+      <p>ГОСТ 19.701-90 (ISO 5807)</p>
+    </div>
+    <button class="icon-btn" id="btn-legend-close" type="button" aria-label="Закрыть">✕</button>
+  </div>
+  <div class="legend-grid">
+    <div class="legend-item">
+      <svg viewBox="0 0 150 64" width="150" height="64"><rect x="12" y="16" width="126" height="32" rx="16" fill="#fff" stroke="#1e293b" stroke-width="1.6"/><text x="75" y="36" text-anchor="middle" dominant-baseline="middle" font-family="Arial" font-size="12" fill="#0f172a">начало / конец</text></svg>
+      <div><b>Терминатор</b><span>Начало и конец алгоритма, return</span></div>
+    </div>
+    <div class="legend-item">
+      <svg viewBox="0 0 150 64" width="150" height="64"><rect x="12" y="14" width="126" height="36" fill="#fff" stroke="#1e293b" stroke-width="1.6"/><text x="75" y="34" text-anchor="middle" dominant-baseline="middle" font-family="Arial" font-size="12" fill="#0f172a">действие</text></svg>
+      <div><b>Процесс</b><span>Присваивание, вычисление, объявление</span></div>
+    </div>
+    <div class="legend-item">
+      <svg viewBox="0 0 150 64" width="150" height="64"><polygon points="75,6 138,32 75,58 12,32" fill="#fff" stroke="#1e293b" stroke-width="1.6"/><text x="75" y="34" text-anchor="middle" dominant-baseline="middle" font-family="Arial" font-size="12" fill="#0f172a">x &gt; 0 ?</text></svg>
+      <div><b>Решение</b><span>Ветвление «да / нет», условия</span></div>
+    </div>
+    <div class="legend-item">
+      <svg viewBox="0 0 150 64" width="150" height="64"><polygon points="28,14 138,14 122,50 12,50" fill="#fff" stroke="#1e293b" stroke-width="1.6"/><text x="75" y="34" text-anchor="middle" dominant-baseline="middle" font-family="Arial" font-size="12" fill="#0f172a">cin &gt;&gt; n</text></svg>
+      <div><b>Данные</b><span>Ввод и вывод (cin, cout, printf)</span></div>
+    </div>
+    <div class="legend-item">
+      <svg viewBox="0 0 150 64" width="150" height="64"><rect x="12" y="14" width="126" height="36" fill="#fff" stroke="#1e293b" stroke-width="1.6"/><line x1="28" y1="14" x2="28" y2="50" stroke="#1e293b" stroke-width="1.3"/><line x1="122" y1="14" x2="122" y2="50" stroke="#1e293b" stroke-width="1.3"/><text x="75" y="34" text-anchor="middle" dominant-baseline="middle" font-family="Arial" font-size="12" fill="#0f172a">sort(a)</text></svg>
+      <div><b>Предопределённый процесс</b><span>Вызов функции или метода</span></div>
+    </div>
+    <div class="legend-item">
+      <svg viewBox="0 0 150 64" width="150" height="64"><polygon points="32,14 118,14 138,32 118,50 32,50 12,32" fill="#fff" stroke="#1e293b" stroke-width="1.6"/><text x="75" y="34" text-anchor="middle" dominant-baseline="middle" font-family="Arial" font-size="12" fill="#0f172a">i &lt; n</text></svg>
+      <div><b>Граница цикла</b><span>Заголовок for / while, возврат цикла</span></div>
+    </div>
+  </div>
+  <div class="legend-note">
+    Линии потока сверху вниз идут без стрелок, возвраты и боковые переходы — со стрелками.
+    Каждая функция рисуется отдельной схемой.
+  </div>
+</dialog>
+
+<script src="js/lexer.js"></script>
+<script src="js/parser.js"></script>
+<script src="js/render.js"></script>
+<script src="js/layout.js"></script>
+<script src="js/examples.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
