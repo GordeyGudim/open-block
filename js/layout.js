@@ -456,11 +456,6 @@
     }
   }
 
-  function shorten(text, max) {
-    const t = String(text || '');
-    return t.length > max ? t.slice(0, max - 1) + '…' : t;
-  }
-
   function layoutFunction(fn) {
     const startNode = shape('terminator', 'начало');
     const body = layoutList(fn.body);
@@ -472,18 +467,14 @@
     parts.push(endNode);
     const inner = stackNodes(parts);
 
-    const title = fn.name + '(' + shorten(fn.params, 54) + ')';
-    const titleW = R.measureText(title, R.TITLE_FONT) + 34;
-    const w = Math.max(inner.w, titleW, 172);
-    const h = 36 + inner.h;
+    const w = Math.max(inner.w, 172);
+    const h = inner.h;
 
     return {
       w: w, h: h,
-      title: title,
       draw: function (r, x, y) {
-        r.functionTitle(x, y, title);
         const firstNode = r.renderedNodes.length;
-        inner.draw(r, x + (w - inner.w) / 2, y + 36);
+        inner.draw(r, x + (w - inner.w) / 2, y);
         const functionNodes = r.renderedNodes.slice(firstNode);
         const end = functionNodes.filter(function (node) { return node.role === 'end'; })[0];
         const returns = functionNodes.filter(function (node) { return node.isReturn; });
