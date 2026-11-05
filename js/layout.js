@@ -76,8 +76,8 @@
   function branchLabel(r, x, y, text, align) {
     const width = R.measureText(text, '11.5px ' + R.FONT_FAMILY) + 8;
     const left = align === 'end' ? x - width + 4 : x - 4;
-    r.add('<rect x="' + fmt(left) + '" y="' + fmt(y - 8) + '" width="' +
-      fmt(width) + '" height="16" fill="#ffffff" stroke="none"/>');
+    r.add('<rect x="' + R.fmt(left) + '" y="' + R.fmt(y - 8) + '" width="' +
+      R.fmt(width) + '" height="16" fill="#ffffff" stroke="none"/>');
     r.label(x, y, text, align);
   }
 
