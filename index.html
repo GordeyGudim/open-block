@@ -76,6 +76,21 @@
           <button id="zoom-fit" type="button" title="Вписать схему">В размер</button>
           <button id="zoom-in" type="button" title="Увеличить">+</button>
         </div>
+        <button class="ghost" id="btn-diagram-edit" type="button" aria-pressed="false" title="Включить редактирование блоков и стрелок">Править схему</button>
+        <button class="ghost" id="btn-selection-reset" type="button" title="Сбросить все ручные правки для этого кода" disabled>Сбросить всё</button>
+        <button class="ghost" id="btn-undo" type="button" title="Отменить последнее изменение" disabled>Отменить изменение</button>
+        <select id="block-type" title="Тип нового блока" aria-label="Тип нового блока">
+          <option value="process">Действие</option>
+          <option value="decision">Условие</option>
+          <option value="io">Ввод / вывод</option>
+          <option value="predefined">Вызов функции</option>
+          <option value="loop">Цикл</option>
+          <option value="terminator">Терминатор</option>
+        </select>
+        <button class="ghost" id="btn-block-add" type="button" title="Добавить блок">+ Блок</button>
+        <button class="ghost" id="btn-block-properties" type="button" title="Изменить подпись или фигуру блока" disabled>Изменить блок</button>
+        <button class="ghost" id="btn-block-connect" type="button" aria-pressed="false" title="Выберите два блока, чтобы добавить между ними стрелку" disabled>+ Стрелка</button>
+        <button class="ghost danger-ghost" id="btn-selection-delete" type="button" title="Удалить выбранный блок или стрелку" disabled>Удалить выбранное</button>
         <button class="ghost" id="btn-svg" type="button" title="Скачать SVG">
           <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
             <path d="M8 2v8M5 7.5 8 10.5l3-3M3 13h10"/>
@@ -106,7 +121,7 @@
 
       <svg id="diagram" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet"></svg>
 
-      <div class="canvas-hint">Колесо — масштаб · перетаскивание — сдвиг</div>
+      <div class="canvas-hint" id="canvasHint">Колесо — масштаб · перетаскивание — сдвиг</div>
     </div>
   </section>
 
@@ -125,7 +140,7 @@
   <div class="legend-grid">
     <div class="legend-item">
       <svg viewBox="0 0 150 64" width="150" height="64"><rect x="12" y="16" width="126" height="32" rx="16" fill="#fff" stroke="#1e293b" stroke-width="1.6"/><text x="75" y="36" text-anchor="middle" dominant-baseline="middle" font-family="Arial" font-size="12" fill="#0f172a">начало / конец</text></svg>
-      <div><b>Терминатор</b><span>Начало и конец алгоритма, return</span></div>
+      <div><b>Терминатор</b><span>Начало и конец алгоритма</span></div>
     </div>
     <div class="legend-item">
       <svg viewBox="0 0 150 64" width="150" height="64"><rect x="12" y="14" width="126" height="36" fill="#fff" stroke="#1e293b" stroke-width="1.6"/><text x="75" y="34" text-anchor="middle" dominant-baseline="middle" font-family="Arial" font-size="12" fill="#0f172a">действие</text></svg>
@@ -152,6 +167,34 @@
     Линии потока сверху вниз идут без стрелок, возвраты и боковые переходы — со стрелками.
     Каждая функция рисуется отдельной схемой.
   </div>
+</dialog>
+
+<dialog id="blockDialog" class="block-dialog">
+  <form id="blockForm">
+    <div class="legend-head">
+      <div>
+        <h2>Изменить блок</h2>
+        <p>Правка относится к схеме и не меняет исходный C++-код.</p>
+      </div>
+    </div>
+    <label class="block-field">Фигура
+      <select id="block-dialog-type">
+        <option value="process">Действие</option>
+        <option value="decision">Условие</option>
+        <option value="io">Ввод / вывод</option>
+        <option value="predefined">Вызов функции</option>
+        <option value="loop">Цикл</option>
+        <option value="terminator">Терминатор</option>
+      </select>
+    </label>
+    <label class="block-field">Текст блока
+      <textarea id="block-dialog-label" rows="3" maxlength="500"></textarea>
+    </label>
+    <div class="block-dialog-actions">
+      <button class="ghost" id="block-dialog-cancel" type="button">Отмена</button>
+      <button class="primary" type="submit">Сохранить</button>
+    </div>
+  </form>
 </dialog>
 
 <script src="js/lexer.js"></script>

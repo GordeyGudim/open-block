@@ -438,7 +438,7 @@
       case 'switch': return layoutSwitch(ast);
       case 'try': return layoutTry(ast);
       case 'return': {
-        const rn = shape('terminator', ast.text || 'return', { maxText: 210 });
+        const rn = shape('process', ast.text || 'return', { maxText: 210 });
         rn.terminates = true;
         return rn;
       }
@@ -465,12 +465,11 @@
     const startNode = shape('terminator', 'начало');
     const body = layoutList(fn.body);
     const endNode = shape('terminator', 'конец');
-    const endsInReturn = !!body.terminates;
 
     const parts = [startNode];
     if (fn.initList) parts.push(shape('process', fn.initList, { maxText: 215 }));
     if (!body.empty) parts.push(body);
-    if (!endsInReturn) parts.push(endNode);
+    parts.push(endNode);
     const inner = stackNodes(parts);
 
     const title = fn.name + '(' + shorten(fn.params, 54) + ')';
@@ -483,7 +482,26 @@
       title: title,
       draw: function (r, x, y) {
         r.functionTitle(x, y, title);
+        const firstNode = r.renderedNodes.length;
         inner.draw(r, x + (w - inner.w) / 2, y + 36);
+        const functionNodes = r.renderedNodes.slice(firstNode);
+        const end = functionNodes.filter(function (node) { return node.role === 'end'; })[0];
+        const returns = functionNodes.filter(function (node) { return node.isReturn; });
+        if (end) {
+          returns.forEach(function (node, index) {
+            const start = [node.x + node.w, node.y + node.h / 2];
+            const target = [end.x + end.w / 2, end.y];
+            const laneX = x + w + 24 + index * 14;
+            const approachY = end.y - 14 - (returns.length - index - 1) * 10;
+            r.line([
+              start,
+              [laneX, start[1]],
+              [laneX, approachY],
+              [target[0], approachY],
+              target
+            ], true);
+          });
+        }
       }
     };
   }

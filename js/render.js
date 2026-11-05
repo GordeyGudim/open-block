@@ -148,6 +148,7 @@
       draw: function (r, x, y) {
         const cx = x + w / 2;
         const cy = y + h / 2;
+        r.beginNode(type, text, x, y, w, h);
         if (type === 'decision') {
           const pts = [
             [cx, y], [x + w, cy], [cx, y + h], [x, cy]
@@ -190,6 +191,7 @@
         r.textLines(cx, cy + shiftY, lines, {
           font: font, lineH: LINE_H, fill: opts.textFill || TEXT_COLOR
         });
+        r.endNode();
       }
     };
   }
@@ -197,6 +199,38 @@
   class Painter {
     constructor() {
       this.items = [];
+      this.routeIndex = 0;
+      this.routePrefix = '';
+      this.routeOverrides = null;
+      this.nodeIndex = 0;
+      this.nodePrefix = '';
+      this.nodeIdOverride = null;
+      this.renderedNodes = [];
+    }
+
+    beginNode(type, text, x, y, w, h) {
+      const id = this.nodeIdOverride || this.nodePrefix + ':node:' + this.nodeIndex++;
+      this.nodeIdOverride = null;
+      const label = String(text == null ? '' : text);
+      const isManualNode = id.indexOf(this.nodePrefix + ':manual:') === 0;
+      const role = !isManualNode && type === 'terminator' && /^начало$/i.test(label.trim())
+        ? 'start' : (!isManualNode && type === 'terminator' && /^конец$/i.test(label.trim()) ? 'end' : '');
+      this.renderedNodes.push({
+        id: id, type: type, label: label, x: x, y: y, w: w, h: h,
+        role: role, isReturn: /^return\b/.test(label.trim())
+      });
+      this.add('<g data-node-id="' + escapeXml(id) + '" data-graph-key="' +
+        escapeXml(this.nodePrefix) + '" data-node-type="' + escapeXml(type) +
+        '" data-node-label="' + escapeXml(label) + '" data-node-x="' + fmt(x) +
+        '" data-node-y="' + fmt(y) + '" data-node-w="' + fmt(w) +
+        '" data-node-h="' + fmt(h) + '"' +
+        (role ? ' data-node-role="' + role + '"' : '') +
+        (/^return\b/.test(label.trim()) ? ' data-node-return="true"' : '') + '>');
+      return id;
+    }
+
+    endNode() {
+      this.add('</g>');
     }
 
     add(markup) {
@@ -243,9 +277,15 @@
 
     line(points, arrow) {
       if (!points || points.length < 2) return;
-      const d = roundedPath(points, 7);
+      const routeId = this.routePrefix + ':' + this.routeIndex++;
+      const override = this.routeOverrides && this.routeOverrides[routeId];
+      const routePoints = override || points;
+      const d = roundedPath(routePoints, 7);
       this.add('<path d="' + d + '" fill="none" stroke="' + LINE_COLOR +
         '" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"' +
+        ' data-route-id="' + escapeXml(routeId) + '" data-route-points="' +
+        escapeXml(JSON.stringify(routePoints)) + '" data-route-default="' +
+        escapeXml(JSON.stringify(points)) + '"' +
         (arrow ? ' marker-end="url(#gost-arrow)"' : '') + '/>');
     }
 

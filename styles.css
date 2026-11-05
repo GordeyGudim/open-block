@@ -335,6 +335,111 @@ textarea:focus-visible {
 
 #diagram.dragging { cursor: grabbing; }
 
+#diagram.route-edit-mode { cursor: crosshair; }
+#diagram.route-edit-mode path[data-route-id] { pointer-events: stroke; cursor: pointer; }
+#diagram.route-edit-mode path.route-selected {
+  stroke: var(--accent);
+  stroke-width: 2.5;
+}
+#diagram.block-edit-mode g[data-node-id] { cursor: move; }
+#diagram.block-edit-mode g.block-selected > * { stroke: var(--accent); }
+#diagram.block-edit-mode g.block-selected text { fill: var(--accent); }
+#diagram.block-edit-mode g.connect-source > * { stroke: #059669; }
+#diagram.block-edit-mode g[data-node-role="start"] { cursor: not-allowed; }
+#diagram .connection-port {
+  fill: #fff;
+  stroke: #4f46e5;
+  stroke-width: 2;
+  vector-effect: non-scaling-stroke;
+  cursor: crosshair;
+  touch-action: none;
+}
+#diagram .connection-port:hover,
+#diagram .connection-port-selected {
+  fill: #4f46e5;
+  stroke: #fff;
+  r: 5.5px;
+}
+#diagram .node-resize-handle {
+  fill: var(--accent);
+  stroke: #fff;
+  stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
+  cursor: nwse-resize;
+  touch-action: none;
+}
+#diagram .route-handle {
+  fill: #fff;
+  stroke: var(--accent);
+  stroke-width: 2;
+  vector-effect: non-scaling-stroke;
+  cursor: move;
+  touch-action: none;
+}
+#diagram .route-handle-segment {
+  fill: var(--accent);
+  stroke: #fff;
+  stroke-width: 1.5;
+}
+
+#btn-diagram-edit.active {
+  color: var(--accent);
+  background: var(--accent-soft);
+  border-color: #c7d2fe;
+}
+
+.toolbar-divider {
+  width: 1px;
+  height: 24px;
+  background: var(--line-strong);
+  margin: 0 2px;
+}
+
+.danger-ghost { color: #b91c1c; }
+.danger-ghost:hover:not(:disabled) { background: #fef2f2; }
+button:disabled { opacity: .45; cursor: not-allowed; }
+
+#block-type {
+  width: auto;
+  min-width: 112px;
+  padding: 7px 8px;
+}
+
+.block-dialog {
+  width: min(460px, 94vw);
+  padding: 0;
+  border: 0;
+  border-radius: 16px;
+  box-shadow: 0 30px 80px -20px rgba(15, 23, 42, .5);
+  color: var(--text);
+}
+.block-dialog::backdrop { background: rgba(15, 23, 42, .45); backdrop-filter: blur(2px); }
+.block-dialog form { padding-bottom: 16px; }
+.block-field {
+  display: grid;
+  gap: 6px;
+  margin: 14px 20px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+}
+.block-field select, .block-field textarea {
+  width: 100%;
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  padding: 9px 10px;
+  color: var(--text);
+  font-weight: 400;
+  background: #fff;
+}
+.block-field textarea { resize: vertical; font: 13px/1.5 "Cascadia Mono", Consolas, monospace; }
+.block-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 4px 20px 0;
+}
+
 .canvas-hint {
   position: absolute;
   right: 12px;

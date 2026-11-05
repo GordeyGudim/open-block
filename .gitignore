@@ -1,9 +1,11 @@
+# локальные инструменты и кэш
 .venv/
 __pycache__/
-*.pyc
+*.py[cod]
 *.egg-info/
-build/
+node_modules/
 dist/
+
 # артефакты генерации
 *.svg
 *.png
